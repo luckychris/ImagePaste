@@ -158,7 +158,7 @@ class IMAGEPASTE_OT_view3d_paste_plane(bpy.types.Operator):
         if clipboard.report.type != "INFO":
             return {"CANCELLED"}
         for image in clipboard.images:
-            bpy.ops.import_image.to_plane(files=[{"name": image.filepath}])
+            bpy.ops.image.import_as_mesh_planes(files=[{"name": image.filepath}])
         return {"FINISHED"}
 
     @classmethod
