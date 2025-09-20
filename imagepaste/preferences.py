@@ -14,9 +14,12 @@ from .tree import remove_empty_subdirectory
 
 def get_subdirectory_name(self):
     """Get the subdirectory name."""
-    return self.has_attr("subdirectory_name") and self.subdirectory_name[ADDON_NAME]
-  #  return self.get("subdirectory_name", ADDON_NAME)
-
+    if bpy.app.version < (5, 0, 0):
+        return self.get("subdirectory_name", ADDON_NAME)
+    else:
+        if self.has_attr("subdirectory_name"):
+            return self.subdirectory_name[ADDON_NAME]
+        return ""
 
 def set_subdirectory_name(self, value):
     """Set the subdirectory name."""
