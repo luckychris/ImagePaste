@@ -188,11 +188,22 @@ class IMAGEPASTE_OT_view3d_paste_reference(bpy.types.Operator):
         if clipboard.report.type != "INFO":
             return {"CANCELLED"}
         for image in clipboard.images:
-            bpy.ops.object.load_reference_image(filepath=image.filepath)
+            if bpy.app.version <= (4, 1, 0):
+                bpy.ops.object.load_reference_image(filepath=image.filepath)
+            else:
+                bpy.ops.object.empty_add(type='IMAGE')
+                empty = bpy.context.active_object
+                img = bpy.data.images.load(image.filepath)
+                empty.data = img
+                # Optionale Einstellungen (über Properties)
+                empty.empty_display_type = 'IMAGE'  # Explizit als Bild anzeigen
+                empty.empty_image_depth = 'FRONT'   # Immer vorne anzeigen (für Referenz nützlich)
+                
         return {"FINISHED"}
 
     @classmethod
     def poll(_cls, context):
+        
         return (
             context.area.type == "VIEW_3D"
             and context.area.ui_type == "VIEW_3D"
